@@ -1,0 +1,1977 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>TBS Enterprise Design System</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TBS GCC ENTERPRISE DESIGN SYSTEM
+   Layout: Sticky nav sidebar + scrollable content area
+   ============================================================ */
+
+:root {
+  /* Brand palette */
+  --teal-950: #012E27;
+  --teal-800: #014D41;
+  --teal-600: #006B5B;
+  --teal-500: #009480;
+  --teal-400: #00B59A;
+  --teal-200: #6BDED0;
+  --teal-100: #C2F4EE;
+  --teal-50:  #EAF9F7;
+
+  /* Neutral (cool slate bias) */
+  --slate-950: #0D1117;
+  --slate-900: #1A2130;
+  --slate-700: #374151;
+  --slate-500: #64748B;
+  --slate-400: #94A3B8;
+  --slate-200: #E2E8F0;
+  --slate-100: #F1F5F9;
+  --slate-50:  #F8FAFC;
+
+  /* Semantic */
+  --emerald: #10B981;
+  --amber:   #F59E0B;
+  --rose:    #F43F5E;
+  --violet:  #7C3AED;
+  --sky:     #0EA5E9;
+
+  /* Ring colors — 5 concentric rings */
+  --ring-1: #009480;   /* capabilities */
+  --ring-2: #F59E0B;   /* skills */
+  --ring-3: #0EA5E9;   /* proficiency */
+  --ring-4: #7C3AED;   /* coverage */
+  --ring-5: #F43F5E;   /* gaps */
+
+  /* Surface system */
+  --bg:         #F4F6F8;
+  --surface:    #FFFFFF;
+  --surface-2:  #F8FAFC;
+  --surface-3:  #F1F5F9;
+  --border:     #E2E8F0;
+  --border-2:   #CBD5E1;
+
+  /* Text */
+  --text-1: #0D1117;
+  --text-2: #374151;
+  --text-3: #64748B;
+  --text-4: #94A3B8;
+
+  /* Typescale */
+  --font-display: 'DM Sans', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+
+  /* Radii */
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   16px;
+  --r-xl:   22px;
+  --r-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.05);
+  --shadow-focus: 0 0 0 3px rgba(0,148,128,.22);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #0D1117;
+    --surface:   #161C27;
+    --surface-2: #1A2130;
+    --surface-3: #1E2840;
+    --border:    #2A3447;
+    --border-2:  #374151;
+    --text-1:    #F0F4F8;
+    --text-2:    #CBD5E1;
+    --text-3:    #94A3B8;
+    --text-4:    #64748B;
+    --slate-100: #1A2130;
+    --slate-50:  #161C27;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:        #0D1117;
+  --surface:   #161C27;
+  --surface-2: #1A2130;
+  --surface-3: #1E2840;
+  --border:    #2A3447;
+  --border-2:  #374151;
+  --text-1:    #F0F4F8;
+  --text-2:    #CBD5E1;
+  --text-3:    #94A3B8;
+  --text-4:    #64748B;
+  --slate-100: #1A2130;
+  --slate-50:  #161C27;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 16px; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+
+/* ── Layout shell ── */
+.shell { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sidebar-brand {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.sidebar-brand .wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--teal-600);
+}
+.sidebar-brand .sub {
+  font-size: 11px;
+  color: var(--text-4);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.nav-section { padding: 0 20px; margin-bottom: 8px; }
+.nav-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-4);
+  padding: 10px 0 4px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: background .12s, color .12s;
+  text-decoration: none;
+}
+.nav-item:hover { background: var(--surface-3); color: var(--text-1); }
+.nav-item.active {
+  background: var(--teal-50);
+  color: var(--teal-600);
+  font-weight: 600;
+}
+.nav-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal-400); flex-shrink: 0;
+}
+
+/* ── Main content ── */
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 48px 80px;
+  max-width: 1100px;
+}
+
+/* ── Section headings ── */
+.section-hero {
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.section-hero .eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--teal-600);
+  margin-bottom: 8px;
+}
+.section-hero h1 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  color: var(--text-1);
+  text-wrap: balance;
+}
+.section-hero p {
+  font-size: 15px;
+  color: var(--text-3);
+  max-width: 620px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.ds-section { margin-bottom: 72px; scroll-margin-top: 24px; }
+.ds-section h2 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+  margin: 0 0 6px;
+  text-wrap: balance;
+}
+.ds-section .section-desc {
+  font-size: 13.5px;
+  color: var(--text-3);
+  margin: 0 0 24px;
+  line-height: 1.6;
+}
+
+/* ── Tokens grid ── */
+.token-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.token-card {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.token-swatch { height: 64px; }
+.token-info { padding: 10px 12px; }
+.token-name { font-size: 12px; font-weight: 700; color: var(--text-2); }
+.token-value { font-size: 11px; color: var(--text-4); font-family: monospace; margin-top: 2px; }
+
+/* ── Type specimens ── */
+.type-row {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+}
+.type-row:last-child { border: none; }
+.type-meta { width: 120px; flex-shrink: 0; }
+.type-meta .tm-label { font-size: 11px; font-weight: 700; color: var(--text-4); text-transform: uppercase; letter-spacing: .06em; }
+.type-meta .tm-spec { font-size: 11px; color: var(--text-4); margin-top: 3px; font-family: monospace; }
+.type-specimen { flex: 1; min-width: 0; color: var(--text-1); }
+
+/* ── Component showcase ── */
+.component-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+.component-preview {
+  background: var(--bg);
+  padding: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+.component-spec {
+  padding: 16px 20px;
+  font-size: 12px;
+  color: var(--text-4);
+  font-family: monospace;
+  background: var(--surface-2);
+}
+
+/* ── Activity Rings ── */
+.ring-container {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+.ring-container svg { position: absolute; inset: 0; overflow: visible; }
+.ring-track { fill: none; stroke-linecap: round; }
+.ring-bg { opacity: 0.12; }
+.ring-progress { stroke-linecap: round; transition: stroke-dashoffset .6s cubic-bezier(.4,0,.2,1); }
+
+/* Center stat inside ring */
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.ring-center .big { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--text-1); line-height: 1; }
+.ring-center .small { font-size: 10px; font-weight: 600; color: var(--text-4); text-transform: uppercase; letter-spacing: .06em; margin-top: 4px; }
+
+/* Ring legend */
+.ring-legend { display: flex; flex-direction: column; gap: 10px; }
+.ring-legend-item { display: flex; align-items: center; gap: 10px; }
+.ring-legend-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.ring-legend-label { font-size: 12px; color: var(--text-3); }
+.ring-legend-val { font-size: 12px; font-weight: 700; color: var(--text-2); margin-left: auto; }
+
+/* ── Cards ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .15s, transform .15s;
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.card-accent-bar {
+  height: 4px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+.card-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-4); margin-bottom: 6px; }
+.card-title { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--text-1); margin: 0 0 6px; }
+.card-meta { font-size: 12px; color: var(--text-3); display: flex; gap: 16px; flex-wrap: wrap; }
+.card-meta b { color: var(--text-2); }
+
+/* ── Stat tiles ── */
+.stat-tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-tile .st-label { font-size: 11.5px; font-weight: 600; color: var(--text-4); text-transform: uppercase; letter-spacing: .06em; }
+.stat-tile .st-value {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 6px 0 4px;
+  font-variant-numeric: tabular-nums;
+}
+.stat-tile .st-delta {
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.delta-up { color: var(--emerald); }
+.delta-down { color: var(--rose); }
+
+/* ── Chips / badges ── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--r-full);
+  font-size: 11.5px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+.chip-teal    { background: var(--teal-50);  color: var(--teal-800);  border-color: var(--teal-100); }
+.chip-amber   { background: #FEF9C3;          color: #854D0E;          border-color: #FDE68A; }
+.chip-rose    { background: #FFF1F2;          color: #9F1239;          border-color: #FECDD3; }
+.chip-violet  { background: #F5F3FF;          color: #5B21B6;          border-color: #DDD6FE; }
+.chip-sky     { background: #F0F9FF;          color: #0369A1;          border-color: #BAE6FD; }
+.chip-slate   { background: var(--slate-100); color: var(--text-3);    border-color: var(--border); }
+.chip-solid   { background: var(--teal-600);  color: #fff; }
+
+/* ── Proficiency ladder ── */
+.prof-ladder { display: flex; gap: 2px; }
+.prof-step {
+  flex: 1;
+  height: 6px;
+  border-radius: var(--r-full);
+  background: var(--border);
+  transition: background .2s;
+}
+.prof-step.filled { background: var(--teal-400); }
+
+/* ── Breadcrumb drill-down ── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--text-4);
+  flex-wrap: wrap;
+}
+.bc-item { color: var(--teal-600); cursor: pointer; font-weight: 600; }
+.bc-item:hover { text-decoration: underline; }
+.bc-sep { color: var(--border-2); }
+.bc-current { color: var(--text-2); font-weight: 600; }
+
+/* ── Drill-down panel ── */
+.drill-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.drill-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface-2);
+}
+.drill-badge {
+  width: 40px; height: 40px; border-radius: var(--r-md);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.drill-header-info h3 { font-family: var(--font-display); font-size: 16px; font-weight: 700; margin: 0; color: var(--text-1); }
+.drill-header-info p { font-size: 12.5px; color: var(--text-3); margin: 3px 0 0; }
+.drill-row {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: background .1s;
+}
+.drill-row:last-child { border: none; }
+.drill-row:hover { background: var(--surface-3); }
+.drill-row-name { font-size: 14px; font-weight: 600; color: var(--text-1); flex: 1; min-width: 0; }
+.drill-row-meta { font-size: 12px; color: var(--text-3); }
+.drill-chev {
+  width: 20px; height: 20px;
+  background: var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-4);
+  font-size: 11px;
+}
+
+/* ── Matrix cell ── */
+.matrix-demo {
+  overflow-x: auto;
+}
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 3px;
+  font-size: 12px;
+  min-width: 560px;
+}
+.matrix-table th {
+  font-weight: 700;
+  font-size: 11px;
+  padding: 10px 12px;
+  text-align: left;
+  color: var(--text-3);
+  background: var(--surface-2);
+  border-radius: var(--r-sm);
+  white-space: nowrap;
+}
+.matrix-table .sticky-col {
+  position: sticky;
+  left: 0;
+  background: var(--surface-2);
+  font-weight: 600;
+  color: var(--text-2);
+  min-width: 180px;
+  z-index: 1;
+}
+.matrix-cell {
+  padding: 0;
+  text-align: center;
+}
+.level-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-sm);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 8px 12px;
+  min-width: 80px;
+  letter-spacing: .02em;
+}
+.level-basic        { background: #EEF2FF; color: #4338CA; }
+.level-intermediate { background: var(--teal-50); color: var(--teal-800); }
+.level-advanced     { background: #FFF7ED; color: #C2410C; }
+.level-empty        { background: var(--surface-3); color: var(--text-4); border-radius: var(--r-sm); display: block; height: 36px; }
+
+/* ── Navigation header ── */
+.page-header {
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  box-shadow: var(--shadow-sm);
+}
+.ph-left { display: flex; align-items: center; gap: 12px; }
+.ph-logo { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--teal-600); }
+.ph-divider { width: 1px; height: 18px; background: var(--border); }
+.ph-title { font-size: 13.5px; font-weight: 600; color: var(--text-2); }
+.ph-tabs { display: flex; gap: 2px; }
+.ph-tab { padding: 6px 14px; border-radius: var(--r-full); font-size: 12.5px; font-weight: 600; color: var(--text-3); cursor: pointer; transition: background .1s, color .1s; }
+.ph-tab:hover { background: var(--surface-3); color: var(--text-2); }
+.ph-tab.active { background: var(--teal-50); color: var(--teal-600); }
+
+/* ── Search bar ── */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-full);
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text-3);
+  min-width: 200px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.search-bar:focus-within { border-color: var(--teal-400); box-shadow: var(--shadow-focus); }
+
+/* ── Color grid ── */
+.color-strip {
+  display: flex;
+  gap: 3px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  height: 48px;
+  margin-bottom: 16px;
+}
+.cs-cell { flex: 1; }
+
+/* ── Interaction spec blocks ── */
+.spec-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.spec-item { padding: 16px; background: var(--surface-2); border-radius: var(--r-lg); border: 1px solid var(--border); }
+.spec-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-4); margin-bottom: 6px; }
+.spec-value { font-size: 13px; color: var(--text-2); font-family: monospace; }
+
+/* ── Divider ── */
+.divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+/* ── Utility ── */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+.gap-24 { gap: 24px; }
+.gap-32 { gap: 32px; }
+.flex-wrap { flex-wrap: wrap; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+
+/* ── Glassmorphism ── */
+.glass {
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid rgba(255,255,255,0.75);
+  box-shadow: 0 4px 24px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.glass-dark {
+  background: rgba(13,17,23,0.55);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 4px 24px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.glass-teal {
+  background: rgba(0,148,128,0.12);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid rgba(0,181,154,0.35);
+  box-shadow: 0 4px 24px rgba(0,148,128,.10), inset 0 1px 0 rgba(255,255,255,.5);
+}
+
+/* ── Elevation scale ── */
+.elev-0 { box-shadow: none; }
+.elev-1 { box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04); }
+.elev-2 { box-shadow: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04); }
+.elev-3 { box-shadow: 0 8px 24px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.05); }
+.elev-4 { box-shadow: 0 16px 40px rgba(0,0,0,.12), 0 6px 12px rgba(0,0,0,.06); }
+.elev-5 { box-shadow: 0 24px 64px rgba(0,0,0,.16), 0 8px 16px rgba(0,0,0,.08); }
+
+/* ── Gradient surfaces ── */
+.grad-teal    { background: linear-gradient(135deg, #006B5B 0%, #00B59A 100%); }
+.grad-indigo  { background: linear-gradient(135deg, #3730A3 0%, #7C3AED 100%); }
+.grad-amber   { background: linear-gradient(135deg, #B45309 0%, #FBBF24 100%); }
+.grad-surface { background: linear-gradient(135deg, #F8FAFC 0%, #EAF9F7 100%); }
+.grad-card    { background: linear-gradient(160deg, rgba(255,255,255,1) 0%, rgba(234,249,247,0.6) 100%); }
+
+/* ── Mesh / aurora ── */
+.mesh-hero {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(0,148,128,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, rgba(124,58,237,.14) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 60% 15%, rgba(14,165,233,.12) 0%, transparent 50%),
+    var(--bg);
+}
+.mesh-card {
+  background:
+    radial-gradient(ellipse 120% 100% at 0% 0%, rgba(0,148,128,.08) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 80% at 100% 100%, rgba(124,58,237,.06) 0%, transparent 50%),
+    var(--surface);
+}
+
+/* ── Glow borders ── */
+.glow-teal    { box-shadow: 0 0 0 1px rgba(0,148,128,.3), 0 0 16px rgba(0,148,128,.18), 0 4px 12px rgba(0,0,0,.06); }
+.glow-violet  { box-shadow: 0 0 0 1px rgba(124,58,237,.3), 0 0 16px rgba(124,58,237,.18), 0 4px 12px rgba(0,0,0,.06); }
+.glow-amber   { box-shadow: 0 0 0 1px rgba(245,158,11,.3), 0 0 16px rgba(245,158,11,.18), 0 4px 12px rgba(0,0,0,.06); }
+
+/* ── Inner highlight ── */
+.highlight-top {
+  position: relative;
+}
+.highlight-top::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,.6) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+/* ── Gradient text ── */
+.text-grad-teal {
+  background: linear-gradient(135deg, var(--teal-600), var(--teal-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-grad-warm {
+  background: linear-gradient(135deg, #7C3AED, #F43F5E);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Shimmer skeleton ── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: var(--r-md);
+}
+
+/* ── Noise overlay (subtle texture) ── */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--surface-3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-3);
+  transition: background .15s, color .15s;
+  font-size: 14px;
+}
+.theme-toggle:hover { background: var(--surface-2); color: var(--text-1); }
+
+/* ── Responsive ── */
+@media (max-width: 840px) {
+  .sidebar { display: none; }
+  .main { padding: 24px 20px 60px; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .spec-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 540px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .token-grid { grid-template-columns: 1fr 1fr; }
+  .section-hero h1 { font-size: 26px; }
+  .component-preview { padding: 24px 16px; }
+}
+</style>
+
+<div class="shell">
+
+  <!-- Sidebar nav -->
+  <nav class="sidebar" aria-label="Design system sections">
+    <div class="sidebar-brand">
+      <div class="wordmark">TBS · GCC</div>
+      <div class="sub">Enterprise Design System v1.0</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Foundation</div>
+      <a class="nav-item active" href="#tokens">
+        <div class="nav-dot"></div> Design Tokens
+      </a>
+      <a class="nav-item" href="#typography">
+        <div class="nav-dot" style="background:var(--amber)"></div> Typography
+      </a>
+      <a class="nav-item" href="#color">
+        <div class="nav-dot" style="background:var(--sky)"></div> Color System
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Components</div>
+      <a class="nav-item" href="#activity-rings">
+        <div class="nav-dot" style="background:var(--violet)"></div> Activity Rings
+      </a>
+      <a class="nav-item" href="#cards">
+        <div class="nav-dot" style="background:var(--rose)"></div> Cards
+      </a>
+      <a class="nav-item" href="#chips">
+        <div class="nav-dot" style="background:var(--emerald)"></div> Chips & Badges
+      </a>
+      <a class="nav-item" href="#modern-effects">
+        <div class="nav-dot" style="background:var(--violet)"></div> Modern Effects
+      </a>
+      <a class="nav-item" href="#navigation">
+        <div class="nav-dot" style="background:var(--teal-400)"></div> Navigation
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Patterns</div>
+      <a class="nav-item" href="#drill-down">
+        <div class="nav-dot" style="background:var(--amber)"></div> Drill-down
+      </a>
+      <a class="nav-item" href="#matrix">
+        <div class="nav-dot" style="background:var(--sky)"></div> Skill Matrix
+      </a>
+      <a class="nav-item" href="#motion">
+        <div class="nav-dot" style="background:var(--violet)"></div> Motion & Interaction
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Specs</div>
+      <a class="nav-item" href="#spacing">
+        <div class="nav-dot" style="background:var(--rose)"></div> Spacing & Grid
+      </a>
+      <a class="nav-item" href="#icons">
+        <div class="nav-dot" style="background:var(--emerald)"></div> Iconography
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <!-- ═══ HERO ═══ -->
+    <div class="section-hero" id="tokens">
+      <div class="eyebrow">Enterprise Design System · v1.0</div>
+      <h1>TBS GCC Capability Playbook</h1>
+      <p>A light-first enterprise UI system with Apple Watch–inspired activity ring data visualization, structured drill-down navigation, and role proficiency mapping. Built for enterprise readability, scalability, and clarity.</p>
+      <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span class="chip chip-teal">Light-first</span>
+        <span class="chip chip-violet">Activity Rings</span>
+        <span class="chip chip-sky">Drill-down UX</span>
+        <span class="chip chip-amber">Dark mode ready</span>
+        <span class="chip chip-slate">Inter + DM Sans</span>
+      </div>
+    </div>
+
+    <!-- ═══ DESIGN TOKENS ═══ -->
+    <section class="ds-section">
+      <h2>Design Tokens</h2>
+      <p class="section-desc">All visual decisions are CSS custom properties on <code>:root</code>. Components reference tokens only — never hardcoded hex values. This makes theming, re-skinning, and dark mode a one-file change.</p>
+
+      <div class="mb-16">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:10px;">Surface Hierarchy</div>
+        <div class="token-grid">
+          <div class="token-card">
+            <div class="token-swatch" style="background:#F4F6F8;border-bottom:1px solid var(--border)"></div>
+            <div class="token-info"><div class="token-name">--bg</div><div class="token-value">#F4F6F8</div></div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#FFFFFF;border-bottom:1px solid var(--border)"></div>
+            <div class="token-info"><div class="token-name">--surface</div><div class="token-value">#FFFFFF</div></div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#F8FAFC;border-bottom:1px solid var(--border)"></div>
+            <div class="token-info"><div class="token-name">--surface-2</div><div class="token-value">#F8FAFC</div></div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#F1F5F9;border-bottom:1px solid var(--border)"></div>
+            <div class="token-info"><div class="token-name">--surface-3</div><div class="token-value">#F1F5F9</div></div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#E2E8F0;border-bottom:1px solid var(--border)"></div>
+            <div class="token-info"><div class="token-name">--border</div><div class="token-value">#E2E8F0</div></div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#CBD5E1;border-bottom:1px solid var(--border)"></div>
+            <div class="token-info"><div class="token-name">--border-2</div><div class="token-value">#CBD5E1</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-16">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:10px;">Text Scale</div>
+        <div class="token-grid">
+          <div class="token-card">
+            <div class="token-swatch" style="background:#0D1117"></div>
+            <div class="token-info"><div class="token-name">--text-1</div><div class="token-value">Headlines, primary</div></div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#374151"></div>
+            <div class="token-info"><div class="token-name">--text-2</div><div class="token-value">Body, labels</div></div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#64748B"></div>
+            <div class="token-info"><div class="token-name">--text-3</div><div class="token-value">Secondary text</div></div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#94A3B8"></div>
+            <div class="token-info"><div class="token-name">--text-4</div><div class="token-value">Meta, captions</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:10px;">Brand Colors</div>
+        <div class="color-strip">
+          <div class="cs-cell" style="background:#012E27" title="teal-950"></div>
+          <div class="cs-cell" style="background:#014D41" title="teal-800"></div>
+          <div class="cs-cell" style="background:#006B5B" title="teal-600"></div>
+          <div class="cs-cell" style="background:#009480" title="teal-500 — Primary"></div>
+          <div class="cs-cell" style="background:#00B59A" title="teal-400"></div>
+          <div class="cs-cell" style="background:#6BDED0" title="teal-200"></div>
+          <div class="cs-cell" style="background:#C2F4EE" title="teal-100"></div>
+          <div class="cs-cell" style="background:#EAF9F7" title="teal-50"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-4);font-family:monospace;">
+          <span>950</span><span>800</span><span>600</span><span style="color:var(--teal-600);font-weight:700;">500 ← Primary</span><span>400</span><span>200</span><span>100</span><span>50</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ TYPOGRAPHY ═══ -->
+    <section class="ds-section" id="typography">
+      <h2>Typography</h2>
+      <p class="section-desc">Two typefaces: <strong>DM Sans</strong> for display and headings (confident, rounded, enterprise-friendly) and <strong>Inter</strong> for body, labels, and data (neutral, highly legible at small sizes). Use <code>font-variant-numeric: tabular-nums</code> wherever digits align.</p>
+
+      <div class="component-box mb-24">
+        <div class="component-preview" style="flex-direction:column;align-items:flex-start;padding:32px 40px;">
+
+          <div class="type-row">
+            <div class="type-meta"><div class="tm-label">Display XL</div><div class="tm-spec">DM Sans 700<br>36px / −0.02em</div></div>
+            <div class="type-specimen" style="font-family:var(--font-display);font-size:36px;font-weight:700;letter-spacing:-0.02em;text-wrap:balance;">GCC Capability Playbook</div>
+          </div>
+
+          <div class="type-row">
+            <div class="type-meta"><div class="tm-label">Heading 1</div><div class="tm-spec">DM Sans 700<br>26px / −0.015em</div></div>
+            <div class="type-specimen" style="font-family:var(--font-display);font-size:26px;font-weight:700;letter-spacing:-0.015em;">Commercial Operations</div>
+          </div>
+
+          <div class="type-row">
+            <div class="type-meta"><div class="tm-label">Heading 2</div><div class="tm-spec">DM Sans 700<br>20px / −0.01em</div></div>
+            <div class="type-specimen" style="font-family:var(--font-display);font-size:20px;font-weight:700;letter-spacing:-0.01em;">Contract & Commercial Management</div>
+          </div>
+
+          <div class="type-row">
+            <div class="type-meta"><div class="tm-label">Card Title</div><div class="tm-spec">DM Sans 700<br>17px / −0.005em</div></div>
+            <div class="type-specimen" style="font-family:var(--font-display);font-size:17px;font-weight:700;letter-spacing:-0.005em;">SLA Administration</div>
+          </div>
+
+          <div class="type-row">
+            <div class="type-meta"><div class="tm-label">Body</div><div class="tm-spec">Inter 400<br>14px / 0em / 1.65</div></div>
+            <div class="type-specimen" style="font-size:14px;line-height:1.65;max-width:540px;color:var(--text-2);">Monitoring and managing service levels, penalties, and performance clauses defined in supplier contracts to ensure commercial obligations are met.</div>
+          </div>
+
+          <div class="type-row">
+            <div class="type-meta"><div class="tm-label">Label</div><div class="tm-spec">Inter 600<br>12px / +0.02em</div></div>
+            <div class="type-specimen" style="font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--text-2);">Proficiency Level</div>
+          </div>
+
+          <div class="type-row">
+            <div class="type-meta"><div class="tm-label">Eyebrow</div><div class="tm-spec">Inter 700<br>11px / +0.08em / CAPS</div></div>
+            <div class="type-specimen" style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-600);">Job Family · Contract Management</div>
+          </div>
+
+          <div class="type-row">
+            <div class="type-meta"><div class="tm-label">Data / Mono</div><div class="tm-spec">Monospace<br>12px / tabular</div></div>
+            <div class="type-specimen" style="font-family:monospace;font-size:12px;font-variant-numeric:tabular-nums;color:var(--text-3);">--teal-500: #009480  |  WL 2 (Manager)  |  84 skills</div>
+          </div>
+
+        </div>
+        <div class="component-spec">font-family: 'DM Sans' (headings) · 'Inter' (body)  |  Line height: body 1.65 · compact 1.3  |  text-wrap: balance on headings</div>
+      </div>
+    </section>
+
+    <!-- ═══ COLOR SYSTEM ═══ -->
+    <section class="ds-section" id="color">
+      <h2>Color System</h2>
+      <p class="section-desc">Colors serve function first. The brand teal is the interactive and accent hue. Semantic colors (emerald / amber / rose) are reserved for status only — never used as decorative accents.</p>
+
+      <div class="grid-4 mb-24">
+        <div class="stat-tile" style="border-top:3px solid var(--teal-500);">
+          <div class="st-label">Primary / Interactive</div>
+          <div class="st-value" style="font-size:22px;color:var(--teal-600);">Teal 500</div>
+          <div style="font-size:11px;color:var(--text-4);font-family:monospace;margin-top:4px;">#009480</div>
+        </div>
+        <div class="stat-tile" style="border-top:3px solid var(--emerald);">
+          <div class="st-label">Success / Positive</div>
+          <div class="st-value" style="font-size:22px;color:var(--emerald);">Emerald</div>
+          <div style="font-size:11px;color:var(--text-4);font-family:monospace;margin-top:4px;">#10B981</div>
+        </div>
+        <div class="stat-tile" style="border-top:3px solid var(--amber);">
+          <div class="st-label">Warning / Partial</div>
+          <div class="st-value" style="font-size:22px;color:var(--amber);">Amber</div>
+          <div style="font-size:11px;color:var(--text-4);font-family:monospace;margin-top:4px;">#F59E0B</div>
+        </div>
+        <div class="stat-tile" style="border-top:3px solid var(--rose);">
+          <div class="st-label">Gap / Deficit</div>
+          <div class="st-value" style="font-size:22px;color:var(--rose);">Rose</div>
+          <div style="font-size:11px;color:var(--text-4);font-family:monospace;margin-top:4px;">#F43F5E</div>
+        </div>
+      </div>
+
+      <div class="component-box">
+        <div class="component-preview" style="background:var(--surface);">
+          <div style="width:100%">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:12px;">Activity Ring Palette — 5 Dimensions</div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border);">
+                <div style="width:12px;height:12px;border-radius:50%;background:#009480"></div>
+                <div><div style="font-size:12px;font-weight:700;color:var(--text-2);">Capabilities</div><div style="font-size:10px;font-family:monospace;color:var(--text-4);">#009480</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border);">
+                <div style="width:12px;height:12px;border-radius:50%;background:#F59E0B"></div>
+                <div><div style="font-size:12px;font-weight:700;color:var(--text-2);">Skills</div><div style="font-size:10px;font-family:monospace;color:var(--text-4);">#F59E0B</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border);">
+                <div style="width:12px;height:12px;border-radius:50%;background:#0EA5E9"></div>
+                <div><div style="font-size:12px;font-weight:700;color:var(--text-2);">Proficiency</div><div style="font-size:10px;font-family:monospace;color:var(--text-4);">#0EA5E9</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border);">
+                <div style="width:12px;height:12px;border-radius:50%;background:#7C3AED"></div>
+                <div><div style="font-size:12px;font-weight:700;color:var(--text-2);">Coverage</div><div style="font-size:10px;font-family:monospace;color:var(--text-4);">#7C3AED</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border);">
+                <div style="width:12px;height:12px;border-radius:50%;background:#F43F5E"></div>
+                <div><div style="font-size:12px;font-weight:700;color:var(--text-2);">Gaps</div><div style="font-size:10px;font-family:monospace;color:var(--text-4);">#F43F5E</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="component-spec">Ring colors are always used in this fixed order, outermost to innermost. They never swap positions.</div>
+      </div>
+    </section>
+
+    <!-- ═══ ACTIVITY RINGS ═══ -->
+    <section class="ds-section" id="activity-rings">
+      <h2>Activity Rings</h2>
+      <p class="section-desc">Inspired by Apple Watch: concentric circular arcs, each measuring a different dimension. The outer ring wraps innermost on completion. Rings animate on mount with a staggered delay (outer first). Each ring is independently interactive — hover reveals the dimension label and value.</p>
+
+      <div class="component-box mb-24">
+        <div class="component-preview" style="gap:48px;flex-wrap:wrap;">
+
+          <!-- Full 3-ring set -->
+          <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap;">
+            <div style="position:relative;width:180px;height:180px;">
+              <svg width="180" height="180" viewBox="0 0 180 180">
+                <!-- Ring 3 (outer) — Capabilities -->
+                <circle cx="90" cy="90" r="78" fill="none" stroke="#009480" stroke-width="10" stroke-opacity=".12"/>
+                <circle id="r3" cx="90" cy="90" r="78" fill="none" stroke="#009480" stroke-width="10"
+                  stroke-linecap="round" stroke-dasharray="489.8"
+                  stroke-dashoffset="83.3" transform="rotate(-90 90 90)"
+                  style="filter:drop-shadow(0 0 4px rgba(0,148,128,.4))"/>
+
+                <!-- Ring 2 (middle) — Skills -->
+                <circle cx="90" cy="90" r="62" fill="none" stroke="#F59E0B" stroke-width="10" stroke-opacity=".12"/>
+                <circle id="r2" cx="90" cy="90" r="62" fill="none" stroke="#F59E0B" stroke-width="10"
+                  stroke-linecap="round" stroke-dasharray="389.6"
+                  stroke-dashoffset="101.3" transform="rotate(-90 90 90)"
+                  style="filter:drop-shadow(0 0 4px rgba(245,158,11,.4))"/>
+
+                <!-- Ring 1 (inner) — Proficiency -->
+                <circle cx="90" cy="90" r="46" fill="none" stroke="#0EA5E9" stroke-width="10" stroke-opacity=".12"/>
+                <circle id="r1" cx="90" cy="90" r="46" fill="none" stroke="#0EA5E9" stroke-width="10"
+                  stroke-linecap="round" stroke-dasharray="289.0"
+                  stroke-dashoffset="86.7" transform="rotate(-90 90 90)"
+                  style="filter:drop-shadow(0 0 4px rgba(14,165,233,.4))"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+                <div style="font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--text-1);line-height:1;">83%</div>
+                <div style="font-size:9.5px;font-weight:700;color:var(--text-4);text-transform:uppercase;letter-spacing:.07em;margin-top:4px;">Coverage</div>
+              </div>
+            </div>
+
+            <div class="ring-legend">
+              <div class="ring-legend-item">
+                <div class="ring-legend-dot" style="background:#009480;box-shadow:0 0 6px rgba(0,148,128,.5);"></div>
+                <div>
+                  <div class="ring-legend-label" style="font-weight:600;color:var(--text-2);">Capabilities</div>
+                  <div style="font-size:11px;color:var(--text-4);">Outer ring</div>
+                </div>
+                <div class="ring-legend-val">83%</div>
+              </div>
+              <div class="ring-legend-item">
+                <div class="ring-legend-dot" style="background:#F59E0B;box-shadow:0 0 6px rgba(245,158,11,.5);"></div>
+                <div>
+                  <div class="ring-legend-label" style="font-weight:600;color:var(--text-2);">Skills Covered</div>
+                  <div style="font-size:11px;color:var(--text-4);">Middle ring</div>
+                </div>
+                <div class="ring-legend-val">74%</div>
+              </div>
+              <div class="ring-legend-item">
+                <div class="ring-legend-dot" style="background:#0EA5E9;box-shadow:0 0 6px rgba(14,165,233,.5);"></div>
+                <div>
+                  <div class="ring-legend-label" style="font-weight:600;color:var(--text-2);">Avg Proficiency</div>
+                  <div style="font-size:11px;color:var(--text-4);">Inner ring</div>
+                </div>
+                <div class="ring-legend-val">70%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini ring variants -->
+          <div style="display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;">
+            <!-- Size: SM (function card) -->
+            <div style="text-align:center;">
+              <div style="position:relative;width:72px;height:72px;margin:0 auto 8px;">
+                <svg width="72" height="72" viewBox="0 0 72 72">
+                  <circle cx="36" cy="36" r="30" fill="none" stroke="#009480" stroke-width="7" stroke-opacity=".12"/>
+                  <circle cx="36" cy="36" r="30" fill="none" stroke="#009480" stroke-width="7"
+                    stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="47"
+                    transform="rotate(-90 36 36)" style="filter:drop-shadow(0 0 3px rgba(0,148,128,.5))"/>
+                  <circle cx="36" cy="36" r="20" fill="none" stroke="#F59E0B" stroke-width="5" stroke-opacity=".12"/>
+                  <circle cx="36" cy="36" r="20" fill="none" stroke="#F59E0B" stroke-width="5"
+                    stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="38"
+                    transform="rotate(-90 36 36)" style="filter:drop-shadow(0 0 3px rgba(245,158,11,.5))"/>
+                </svg>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text-1);">75%</div>
+              </div>
+              <div style="font-size:11px;color:var(--text-4);">SM · Card</div>
+            </div>
+
+            <!-- Size: XS (table cell) -->
+            <div style="text-align:center;">
+              <div style="position:relative;width:44px;height:44px;margin:0 auto 8px;">
+                <svg width="44" height="44" viewBox="0 0 44 44">
+                  <circle cx="22" cy="22" r="18" fill="none" stroke="#009480" stroke-width="5" stroke-opacity=".12"/>
+                  <circle cx="22" cy="22" r="18" fill="none" stroke="#009480" stroke-width="5"
+                    stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="28"
+                    transform="rotate(-90 22 22)" style="filter:drop-shadow(0 0 2px rgba(0,148,128,.5))"/>
+                </svg>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-1);">75%</div>
+              </div>
+              <div style="font-size:11px;color:var(--text-4);">XS · Cell</div>
+            </div>
+          </div>
+        </div>
+        <div class="component-spec">
+          stroke-linecap: round  |  Stagger delay: outer +0ms, middle +120ms, inner +240ms  |  Easing: cubic-bezier(.4,0,.2,1) 600ms
+          Ring gap: 16px between centers  |  Track stroke = progress stroke  |  Track opacity: 12%  |  Glow: drop-shadow 4px, color at 40% opacity
+        </div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;color:var(--text-2);margin-bottom:12px;">Ring Construction Rules</div>
+      <div class="spec-row">
+        <div class="spec-item">
+          <div class="spec-label">Ring Spacing</div>
+          <div class="spec-value">Gap = stroke-width + 6px minimum<br>MD: r = 78, 62, 46 (gap 10px)<br>SM: r = 30, 20 (gap 5px)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Stroke Width</div>
+          <div class="spec-value">MD rings: 10px<br>SM rings: 7px / 5px<br>XS ring: 5px</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Start Angle</div>
+          <div class="spec-value">All rings start at 12 o'clock<br>transform="rotate(-90 cx cy)"<br>Clockwise fill direction</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">dash-offset formula</div>
+          <div class="spec-value">circumference = 2π × r<br>offset = circumf × (1 − pct/100)<br>Track: same stroke, opacity .12</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CARDS ═══ -->
+    <section class="ds-section" id="cards">
+      <h2>Cards</h2>
+      <p class="section-desc">Three card variants for different hierarchy levels. Function cards carry mini activity rings. Capability cards carry accent bars. Skill cards are flat list rows. All cards hover-lift on interaction.</p>
+
+      <div class="component-box mb-24">
+        <div class="component-preview" style="flex-direction:column;align-items:stretch;gap:0;padding:32px;">
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:12px;">Level 1 — Function Card (with Activity Ring)</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:32px;">
+
+            <div class="card" style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="position:relative;width:64px;height:64px;flex-shrink:0;">
+                <svg width="64" height="64" viewBox="0 0 64 64">
+                  <circle cx="32" cy="32" r="27" fill="none" stroke="#009480" stroke-width="6" stroke-opacity=".12"/>
+                  <circle cx="32" cy="32" r="27" fill="none" stroke="#009480" stroke-width="6"
+                    stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="30"
+                    transform="rotate(-90 32 32)" style="filter:drop-shadow(0 0 3px rgba(0,148,128,.5))"/>
+                  <circle cx="32" cy="32" r="18" fill="none" stroke="#F59E0B" stroke-width="5" stroke-opacity=".12"/>
+                  <circle cx="32" cy="32" r="18" fill="none" stroke="#F59E0B" stroke-width="5"
+                    stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="28"
+                    transform="rotate(-90 32 32)" style="filter:drop-shadow(0 0 3px rgba(245,158,11,.5))"/>
+                </svg>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text-1);">82%</div>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div class="card-eyebrow">Commercial Ops</div>
+                <div class="card-title">Contract & Commercial Management</div>
+                <div class="card-meta"><span><b>6</b> capabilities</span><span><b>38</b> skills</span></div>
+                <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+                  <span class="chip chip-teal" style="font-size:10.5px;padding:3px 8px;">Build ×5</span>
+                  <span class="chip chip-sky" style="font-size:10.5px;padding:3px 8px;">Buy ×2</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="position:relative;width:64px;height:64px;flex-shrink:0;">
+                <svg width="64" height="64" viewBox="0 0 64 64">
+                  <circle cx="32" cy="32" r="27" fill="none" stroke="#009480" stroke-width="6" stroke-opacity=".12"/>
+                  <circle cx="32" cy="32" r="27" fill="none" stroke="#009480" stroke-width="6"
+                    stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="51"
+                    transform="rotate(-90 32 32)" style="filter:drop-shadow(0 0 3px rgba(0,148,128,.5))"/>
+                  <circle cx="32" cy="32" r="18" fill="none" stroke="#0EA5E9" stroke-width="5" stroke-opacity=".12"/>
+                  <circle cx="32" cy="32" r="18" fill="none" stroke="#0EA5E9" stroke-width="5"
+                    stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="45"
+                    transform="rotate(-90 32 32)" style="filter:drop-shadow(0 0 3px rgba(14,165,233,.5))"/>
+                </svg>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text-1);">70%</div>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div class="card-eyebrow">Digital Marketing</div>
+                <div class="card-title">Creative & Design Operations</div>
+                <div class="card-meta"><span><b>4</b> capabilities</span><span><b>24</b> skills</span></div>
+                <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+                  <span class="chip chip-violet" style="font-size:10.5px;padding:3px 8px;">Sunrise ×8</span>
+                  <span class="chip chip-amber" style="font-size:10.5px;padding:3px 8px;">Bot ×3</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:12px;">Level 2 — Capability Card (accent bar)</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:32px;">
+            <div class="card" style="padding:18px;">
+              <div class="card-accent-bar" style="background:linear-gradient(90deg,#009480,#00B59A);"></div>
+              <div class="card-eyebrow">Core · Functional</div>
+              <div class="card-title" style="font-size:15px;">SLA Administration</div>
+              <div style="margin:8px 0;"><div class="prof-ladder"><div class="prof-step filled"></div><div class="prof-step filled"></div><div class="prof-step filled"></div><div class="prof-step"></div></div></div>
+              <div class="card-meta"><span><b>5</b> roles mapped</span></div>
+            </div>
+            <div class="card" style="padding:18px;">
+              <div class="card-accent-bar" style="background:linear-gradient(90deg,#F59E0B,#FCD34D);"></div>
+              <div class="card-eyebrow">Sunrise · Technical</div>
+              <div class="card-title" style="font-size:15px;">AI Literacy</div>
+              <div style="margin:8px 0;"><div class="prof-ladder"><div class="prof-step filled"></div><div class="prof-step filled"></div><div class="prof-step"></div><div class="prof-step"></div></div></div>
+              <div class="card-meta"><span><b>5</b> roles mapped</span></div>
+            </div>
+            <div class="card" style="padding:18px;">
+              <div class="card-accent-bar" style="background:linear-gradient(90deg,#0EA5E9,#38BDF8);"></div>
+              <div class="card-eyebrow">Core · Technical</div>
+              <div class="card-title" style="font-size:15px;">ERP Systems</div>
+              <div style="margin:8px 0;"><div class="prof-ladder"><div class="prof-step filled"></div><div class="prof-step filled"></div><div class="prof-step filled"></div><div class="prof-step filled"></div></div></div>
+              <div class="card-meta"><span><b>5</b> roles mapped</span></div>
+            </div>
+          </div>
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:12px;">Stat Tiles</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;">
+            <div class="stat-tile">
+              <div class="st-label">Functions</div>
+              <div class="st-value">7</div>
+              <div class="st-delta delta-up">↑ +1 this cycle</div>
+            </div>
+            <div class="stat-tile">
+              <div class="st-label">Job Families</div>
+              <div class="st-value">24</div>
+              <div class="st-delta delta-up">↑ +3 added</div>
+            </div>
+            <div class="stat-tile">
+              <div class="st-label">Total Skills</div>
+              <div class="st-value">312</div>
+              <div class="st-delta delta-up">↑ +42 new</div>
+            </div>
+            <div class="stat-tile">
+              <div class="st-label">Coverage</div>
+              <div class="st-value">83%</div>
+              <div class="st-delta delta-down">↓ −2pp vs last</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="component-spec">
+          Hover state: translateY(−2px) + shadow-md  |  Card border-radius: --r-xl (22px)  |  Accent bar h: 4px, radius 4px
+          Proficiency ladder: 4 segments, filled = --teal-400, empty = --border, height 6px
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CHIPS ═══ -->
+    <section class="ds-section" id="chips">
+      <h2>Chips &amp; Badges</h2>
+      <p class="section-desc">Used for skill category (Core / Sunrise), delivery mode (Build / Buy / Borrow / Bot), and proficiency level. Shape is always pill (border-radius: 9999px). Each semantic meaning has a fixed color — never swap them.</p>
+
+      <div class="component-box mb-24">
+        <div class="component-preview" style="flex-direction:column;align-items:flex-start;gap:20px;">
+
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:10px;">Skill Category</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="chip chip-teal">Core</span>
+              <span class="chip chip-amber">Sunrise</span>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:10px;">Delivery Mode</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="chip chip-teal">Build</span>
+              <span class="chip chip-sky">Buy</span>
+              <span class="chip chip-violet">Borrow</span>
+              <span class="chip chip-rose">Bot</span>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:10px;">Proficiency Level</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="chip level-basic">Basic</span>
+              <span class="chip level-intermediate">Intermediate</span>
+              <span class="chip level-advanced">Advanced</span>
+              <span class="chip chip-slate">–</span>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:10px;">Skill Type</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="chip chip-slate">Functional</span>
+              <span class="chip chip-slate" style="background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE;">Technical</span>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:10px;">Action Chip (with icon)</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="chip chip-solid">→ View Capability</span>
+              <span class="chip chip-teal">⤢ Drill Down</span>
+              <span class="chip chip-slate">↓ Export</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="component-spec">
+          All chips: border-radius: 9999px  |  Padding: 4px 10px  |  Font: Inter 600, 11.5px
+          Color assignments are fixed — do not reuse a color for a different semantic meaning
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MODERN EFFECTS ═══ -->
+    <section class="ds-section" id="modern-effects">
+      <h2>Modern Visual Effects</h2>
+      <p class="section-desc">Glassmorphism, mesh gradients, elevation, glow borders, and shimmer skeletons add depth and tactility without overwhelming the enterprise aesthetic. Apply them sparingly — one effect per component layer.</p>
+
+      <!-- Glassmorphism -->
+      <div style="font-size:13px;font-weight:700;color:var(--text-2);margin-bottom:12px;">Glassmorphism</div>
+      <div class="component-box mb-24">
+        <div class="component-preview" style="flex-direction:column;gap:24px;padding:0;">
+
+          <!-- Mesh backdrop -->
+          <div class="mesh-hero" style="padding:40px 32px;border-radius:0;width:100%;display:flex;gap:20px;flex-wrap:wrap;align-items:center;justify-content:center;min-height:200px;">
+            <!-- Light glass card -->
+            <div class="glass" style="border-radius:var(--r-xl);padding:22px 24px;min-width:200px;max-width:240px;">
+              <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-700);margin-bottom:6px;">Capabilities</div>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--text-1);letter-spacing:-0.02em;line-height:1;">83%</div>
+              <div style="font-size:12px;color:var(--text-3);margin-top:4px;">Coverage score</div>
+              <div style="margin-top:12px;height:4px;border-radius:4px;background:rgba(0,0,0,.08);">
+                <div style="height:4px;border-radius:4px;background:var(--teal-500);width:83%;"></div>
+              </div>
+            </div>
+
+            <!-- Teal-tinted glass -->
+            <div class="glass-teal highlight-top" style="border-radius:var(--r-xl);padding:22px 24px;min-width:200px;max-width:240px;position:relative;">
+              <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-700);margin-bottom:6px;">Skills Covered</div>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--teal-800);letter-spacing:-0.02em;line-height:1;">74%</div>
+              <div style="font-size:12px;color:var(--teal-600);margin-top:4px;">312 skills · 231 mapped</div>
+              <div style="margin-top:12px;height:4px;border-radius:4px;background:rgba(0,148,128,.15);">
+                <div style="height:4px;border-radius:4px;background:var(--teal-500);width:74%;"></div>
+              </div>
+            </div>
+
+            <!-- Dark glass (for dark panels) -->
+            <div class="glass-dark" style="border-radius:var(--r-xl);padding:22px 24px;min-width:200px;max-width:240px;">
+              <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-300, #6BDED0);margin-bottom:6px;">Gaps Identified</div>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:700;color:#F0F4F8;letter-spacing:-0.02em;line-height:1;">18</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">Critical · needs attention</div>
+              <div style="margin-top:12px;height:4px;border-radius:4px;background:rgba(255,255,255,.1);">
+                <div style="height:4px;border-radius:4px;background:#F43F5E;width:26%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="component-spec">
+          Light glass: rgba(255,255,255,0.55) + backdrop-filter: blur(18px) saturate(1.6) + border rgba(255,255,255,0.75)
+          Tinted glass: rgba(brand,0.12) + matching border at 35% opacity  |  Dark glass: rgba(13,17,23,0.55) + border rgba(255,255,255,0.10)
+          Always place on a colorful or blurred background — glass on flat white is invisible  |  Inner highlight: ::before gradient from white 60%→transparent
+        </div>
+      </div>
+
+      <!-- Elevation scale -->
+      <div style="font-size:13px;font-weight:700;color:var(--text-2);margin-bottom:12px;">Elevation Scale</div>
+      <div class="component-box mb-24">
+        <div class="component-preview" style="gap:16px;flex-wrap:wrap;">
+          <div style="background:var(--surface);border-radius:var(--r-lg);padding:16px 20px;text-align:center;min-width:100px;" class="elev-0">
+            <div style="font-size:11px;font-weight:700;color:var(--text-4);">Elev 0</div>
+            <div style="font-size:10.5px;font-family:monospace;color:var(--text-4);margin-top:4px;">none</div>
+          </div>
+          <div style="background:var(--surface);border-radius:var(--r-lg);padding:16px 20px;text-align:center;min-width:100px;" class="elev-1">
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);">Elev 1</div>
+            <div style="font-size:10.5px;font-family:monospace;color:var(--text-4);margin-top:4px;">flat cards</div>
+          </div>
+          <div style="background:var(--surface);border-radius:var(--r-lg);padding:16px 20px;text-align:center;min-width:100px;" class="elev-2">
+            <div style="font-size:11px;font-weight:700;color:var(--text-2);">Elev 2</div>
+            <div style="font-size:10.5px;font-family:monospace;color:var(--text-4);margin-top:4px;">panels</div>
+          </div>
+          <div style="background:var(--surface);border-radius:var(--r-lg);padding:16px 20px;text-align:center;min-width:100px;" class="elev-3">
+            <div style="font-size:11px;font-weight:700;color:var(--text-1);">Elev 3</div>
+            <div style="font-size:10.5px;font-family:monospace;color:var(--text-4);margin-top:4px;">hover state</div>
+          </div>
+          <div style="background:var(--surface);border-radius:var(--r-lg);padding:16px 20px;text-align:center;min-width:100px;" class="elev-4">
+            <div style="font-size:11px;font-weight:700;color:var(--text-1);font-weight:800;">Elev 4</div>
+            <div style="font-size:10.5px;font-family:monospace;color:var(--text-4);margin-top:4px;">modals</div>
+          </div>
+          <div style="background:var(--surface);border-radius:var(--r-lg);padding:16px 20px;text-align:center;min-width:100px;" class="elev-5">
+            <div style="font-size:11px;font-weight:700;color:var(--text-1);font-weight:800;">Elev 5</div>
+            <div style="font-size:10.5px;font-family:monospace;color:var(--text-4);margin-top:4px;">tooltips</div>
+          </div>
+        </div>
+        <div class="component-spec">
+          Use elevation to communicate z-layer, never decoration. Only one step up on hover.
+          Elev 0: inline/embedded  |  1: default card  |  2: interactive panel  |  3: card:hover  |  4: modal/sheet  |  5: floating tooltip/menu
+        </div>
+      </div>
+
+      <!-- Gradient cards -->
+      <div style="font-size:13px;font-weight:700;color:var(--text-2);margin-bottom:12px;">Gradient Surfaces &amp; Cards</div>
+      <div class="component-box mb-24">
+        <div class="component-preview" style="flex-direction:column;gap:20px;align-items:stretch;">
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+            <!-- Gradient function card -->
+            <div style="border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow-md);">
+              <div class="grad-teal" style="padding:20px;position:relative;overflow:hidden;">
+                <div style="position:absolute;right:-20px;top:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.1);"></div>
+                <div style="position:absolute;right:10px;bottom:-30px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.06);"></div>
+                <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.7);margin-bottom:8px;">Featured Function</div>
+                <div style="font-family:var(--font-display);font-size:18px;font-weight:700;color:#fff;line-height:1.2;">Commercial Ops</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:4px;">6 families · 84 skills</div>
+              </div>
+              <div style="background:var(--surface);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+                <span class="chip chip-teal" style="font-size:10px;padding:3px 8px;">83% coverage</span>
+                <span style="font-size:12px;color:var(--teal-600);font-weight:700;">View →</span>
+              </div>
+            </div>
+
+            <!-- Sunset / warm gradient -->
+            <div style="border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow-md);">
+              <div class="grad-indigo" style="padding:20px;position:relative;overflow:hidden;">
+                <div style="position:absolute;right:-20px;top:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.1);"></div>
+                <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.7);margin-bottom:8px;">Sunrise Skills</div>
+                <div style="font-family:var(--font-display);font-size:18px;font-weight:700;color:#fff;line-height:1.2;">AI & Automation</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:4px;">42 skills emerging</div>
+              </div>
+              <div style="background:var(--surface);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+                <span class="chip chip-violet" style="font-size:10px;padding:3px 8px;">New this cycle</span>
+                <span style="font-size:12px;color:var(--violet);font-weight:700;">View →</span>
+              </div>
+            </div>
+
+            <!-- Mesh gradient card -->
+            <div class="mesh-card" style="border-radius:var(--r-xl);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow-sm);">
+              <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-4);margin-bottom:8px;">Organic Surface</div>
+              <div style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--text-1);line-height:1.2;">Mesh Gradient</div>
+              <div style="font-size:12px;color:var(--text-3);margin-top:4px;">Subtle background variation</div>
+              <div style="margin-top:14px;display:flex;gap:6px;">
+                <span class="chip chip-teal" style="font-size:10px;padding:3px 8px;">Core</span>
+                <span class="chip chip-slate" style="font-size:10px;padding:3px 8px;">Functional</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="component-spec">
+          Solid gradient cards: use for hero/featured items only (1 per screen max)
+          Mesh card: radial gradients at corners, low opacity (6–10%), always on --surface base
+          Gradient text: only on large display headings ≥ 24px, never on body copy or labels
+        </div>
+      </div>
+
+      <!-- Glow borders -->
+      <div style="font-size:13px;font-weight:700;color:var(--text-2);margin-bottom:12px;">Glow Borders &amp; Focus States</div>
+      <div class="component-box mb-24">
+        <div class="component-preview" style="gap:20px;flex-wrap:wrap;">
+          <div class="card glow-teal" style="min-width:180px;padding:18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--teal-600);margin-bottom:6px;">Active / Selected</div>
+            <div style="font-size:15px;font-weight:700;color:var(--text-1);">SLA Administration</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:4px;">Core capability</div>
+          </div>
+          <div class="card glow-violet" style="min-width:180px;padding:18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--violet);margin-bottom:6px;">Sunrise Focus</div>
+            <div style="font-size:15px;font-weight:700;color:var(--text-1);">AI Literacy</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:4px;">Emerging skill</div>
+          </div>
+          <div class="card glow-amber" style="min-width:180px;padding:18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--amber);margin-bottom:6px;">Warning State</div>
+            <div style="font-size:15px;font-weight:700;color:var(--text-1);">3 Gaps Flagged</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:4px;">Needs resolution</div>
+          </div>
+        </div>
+        <div class="component-spec">
+          Glow = box-shadow: 0 0 0 1px color@30% + 0 0 16px color@18%  |  Use only on selected / active / warning states, not on hover
+          Focus ring (keyboard): box-shadow: 0 0 0 3px rgba(0,148,128,.22) — always teal regardless of component color
+        </div>
+      </div>
+
+      <!-- Skeleton shimmer -->
+      <div style="font-size:13px;font-weight:700;color:var(--text-2);margin-bottom:12px;">Skeleton Loaders (Shimmer)</div>
+      <div class="component-box mb-24">
+        <div class="component-preview" style="flex-direction:column;gap:12px;align-items:stretch;max-width:480px;">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div class="shimmer" style="width:56px;height:56px;border-radius:50%;flex-shrink:0;"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+              <div class="shimmer" style="height:14px;width:70%;"></div>
+              <div class="shimmer" style="height:11px;width:45%;"></div>
+            </div>
+          </div>
+          <div class="shimmer" style="height:80px;width:100%;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+            <div class="shimmer" style="height:40px;"></div>
+            <div class="shimmer" style="height:40px;"></div>
+            <div class="shimmer" style="height:40px;"></div>
+          </div>
+        </div>
+        <div class="component-spec">
+          background: linear-gradient(90deg, surface-2 25%, surface-3 50%, surface-2 75%)
+          background-size: 800px 100%  |  animation: shimmer 1.6s infinite  |  Use same shape as real content (never rectangles for circular items)
+        </div>
+      </div>
+
+      <!-- Usage rules -->
+      <div style="font-size:13px;font-weight:700;color:var(--text-2);margin-bottom:12px;">Effect Hierarchy &amp; Usage Rules</div>
+      <div class="spec-row">
+        <div class="spec-item">
+          <div class="spec-label">✅ Use glass when</div>
+          <div class="spec-value" style="color:var(--text-2);">The card floats over a rich background (mesh, image, color band). The playbook landing hero, the ring overlay panel, drill-down sidebars.</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">🚫 Avoid glass when</div>
+          <div class="spec-value" style="color:var(--text-2);">The background is flat white or --surface. The content area is data-dense (matrix, tables). Both parent + child are glass.</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">✅ Use gradient cards when</div>
+          <div class="spec-value" style="color:var(--text-2);">Highlighting one featured function per screen, a CTA banner, or a "New / Sunrise" callout tile. Max 1 solid gradient card visible at a time.</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">✅ Use glow borders when</div>
+          <div class="spec-value" style="color:var(--text-2);">A card is the currently selected drill-down item, a filter chip is active, or a row is in warning state. Never on hover — elevation handles that.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ NAVIGATION ═══ -->
+    <section class="ds-section" id="navigation">
+      <h2>Navigation Components</h2>
+      <p class="section-desc">A persistent top header carries the brand, breadcrumb, and section tabs. The search bar lives in the header. Mobile collapses tabs to a bottom nav sheet.</p>
+
+      <div class="component-box mb-16">
+        <div class="component-preview" style="padding:0;flex-direction:column;gap:0;">
+          <!-- Header specimen -->
+          <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;width:100%;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="font-family:var(--font-display);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal-600);">TBS · GCC</div>
+              <div style="width:1px;height:18px;background:var(--border);"></div>
+              <div class="breadcrumb">
+                <span class="bc-item">Functions</span>
+                <span class="bc-sep">›</span>
+                <span class="bc-item">Commercial Ops</span>
+                <span class="bc-sep">›</span>
+                <span class="bc-current">Contract Management</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="search-bar" style="font-size:12px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                Search a skill…
+              </div>
+              <div class="theme-toggle">◑</div>
+            </div>
+          </div>
+          <!-- Tabs row -->
+          <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:4px;height:44px;align-items:center;width:100%;">
+            <div class="ph-tab active">Overview</div>
+            <div class="ph-tab">Capabilities</div>
+            <div class="ph-tab">Skills Matrix</div>
+            <div class="ph-tab">Roles</div>
+          </div>
+        </div>
+        <div class="component-spec">
+          Header height: 56px  |  Tab bar height: 44px  |  Tab active: teal-50 bg + teal-600 text  |  Search: focus adds teal ring (shadow-focus)
+          Breadcrumb: Inter 600, 12.5px  |  Separator: › (›) in border-2 color
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ DRILL-DOWN ═══ -->
+    <section class="ds-section" id="drill-down">
+      <h2>Drill-Down Pattern</h2>
+      <p class="section-desc">Three levels: Function → Job Family → Capability → Skill detail. Each level replaces the list panel with the next level's rows. Navigation is tracked in breadcrumbs in the header and in the panel. Clicking back animates the list back up a level.</p>
+
+      <div class="component-box mb-24">
+        <div class="component-preview" style="flex-direction:column;gap:12px;align-items:stretch;max-width:520px;">
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:4px;">Level 1 — Function List</div>
+          <div class="drill-panel">
+            <div class="drill-header">
+              <div class="drill-badge" style="background:var(--teal-50);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal-600)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+              </div>
+              <div class="drill-header-info">
+                <h3>All Functions</h3>
+                <p>7 business functions · 312 skills total</p>
+              </div>
+            </div>
+            <div class="drill-row">
+              <div style="width:8px;height:8px;border-radius:50%;background:#009480;flex-shrink:0;"></div>
+              <div class="drill-row-name">Commercial Operations</div>
+              <div class="drill-row-meta">6 families · 84 skills</div>
+              <div class="drill-chev">›</div>
+            </div>
+            <div class="drill-row" style="background:var(--teal-50);">
+              <div style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0;"></div>
+              <div class="drill-row-name" style="color:var(--teal-700);font-weight:700;">Digital / Internet Marketing</div>
+              <div class="drill-row-meta">4 families · 62 skills</div>
+              <div class="drill-chev" style="background:var(--teal-100);color:var(--teal-600);">›</div>
+            </div>
+            <div class="drill-row">
+              <div style="width:8px;height:8px;border-radius:50%;background:#0EA5E9;flex-shrink:0;"></div>
+              <div class="drill-row-name">Finance Operations</div>
+              <div class="drill-row-meta">5 families · 71 skills</div>
+              <div class="drill-chev">›</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px;color:var(--text-4);font-size:12px;justify-content:center;">
+            <div style="flex:1;height:1px;background:var(--border);"></div>
+            <span>slide in →</span>
+            <div style="flex:1;height:1px;background:var(--border);"></div>
+          </div>
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:4px;">Level 2 — Job Family List</div>
+          <div class="drill-panel">
+            <div class="drill-header">
+              <button style="background:none;border:none;cursor:pointer;color:var(--teal-600);padding:0;font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px;">← Back</button>
+              <div class="drill-header-info" style="margin-left:8px;">
+                <h3>Digital / Internet Marketing</h3>
+                <p>4 job families · 62 skills</p>
+              </div>
+            </div>
+            <div class="drill-row">
+              <div style="width:8px;height:8px;border-radius:50%;background:#009480;flex-shrink:0;"></div>
+              <div class="drill-row-name">Creative and Design</div>
+              <div class="drill-row-meta">10 roles · 24 skills</div>
+              <div class="drill-chev">›</div>
+            </div>
+            <div class="drill-row">
+              <div style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0;"></div>
+              <div class="drill-row-name">Performance Marketing</div>
+              <div class="drill-row-meta">8 roles · 18 skills</div>
+              <div class="drill-chev">›</div>
+            </div>
+          </div>
+        </div>
+        <div class="component-preview" style="background:var(--surface);padding:20px;flex-direction:column;align-items:flex-start;gap:8px;border-top:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:4px;">Drill-down Transitions</div>
+          <div class="spec-row" style="width:100%">
+            <div class="spec-item">
+              <div class="spec-label">Enter (drill in)</div>
+              <div class="spec-value">translateX(+24px) → 0<br>opacity: 0 → 1<br>duration: 220ms ease-out</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Exit (drill back)</div>
+              <div class="spec-value">translateX(0) → +24px<br>opacity: 1 → 0<br>duration: 180ms ease-in</div>
+            </div>
+          </div>
+        </div>
+        <div class="component-spec">Row hover: background surface-3 transition 100ms  |  Active row: teal-50 bg + teal-600 text weight 700  |  Panel border-radius: --r-xl</div>
+      </div>
+    </section>
+
+    <!-- ═══ SKILL MATRIX ═══ -->
+    <section class="ds-section" id="matrix">
+      <h2>Skill Matrix</h2>
+      <p class="section-desc">A sticky-column table mapping skills (rows) to roles (columns). Proficiency is encoded as color-coded pills, not just text. Empty cells use a muted empty state. Scroll container provides horizontal overflow without widening the page.</p>
+
+      <div class="component-box mb-24">
+        <div class="component-preview" style="padding:24px;flex-direction:column;align-items:stretch;">
+          <div class="matrix-demo">
+            <table class="matrix-table">
+              <thead>
+                <tr>
+                  <th class="sticky-col">Skill</th>
+                  <th>Lead-CCM</th>
+                  <th>Lead-Contracts</th>
+                  <th>Manager-CCM</th>
+                  <th>Mgr-Contracts</th>
+                  <th>Sr Mgr-Contracts</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="sticky-col" style="padding:10px 14px;font-size:13px;">Commercial Compliance Audits</td>
+                  <td class="matrix-cell"><span style="display:block;height:36px;background:var(--surface-3);border-radius:var(--r-sm);"></span></td>
+                  <td class="matrix-cell"><div class="level-pill level-basic">Basic</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-intermediate">Intermediate</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-intermediate">Intermediate</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-advanced">Advanced</div></td>
+                </tr>
+                <tr>
+                  <td class="sticky-col" style="padding:10px 14px;font-size:13px;">Contract Management</td>
+                  <td class="matrix-cell"><div class="level-pill level-basic">Basic</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-basic">Basic</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-intermediate">Intermediate</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-intermediate">Intermediate</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-advanced">Advanced</div></td>
+                </tr>
+                <tr>
+                  <td class="sticky-col" style="padding:10px 14px;font-size:13px;">AI Literacy</td>
+                  <td class="matrix-cell"><div class="level-pill level-basic">Basic</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-basic">Basic</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-intermediate">Intermediate</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-intermediate">Intermediate</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-intermediate">Intermediate</div></td>
+                </tr>
+                <tr>
+                  <td class="sticky-col" style="padding:10px 14px;font-size:13px;">Agentic AI & Orchestration</td>
+                  <td class="matrix-cell"><span style="display:block;height:36px;background:var(--surface-3);border-radius:var(--r-sm);"></span></td>
+                  <td class="matrix-cell"><span style="display:block;height:36px;background:var(--surface-3);border-radius:var(--r-sm);"></span></td>
+                  <td class="matrix-cell"><div class="level-pill level-basic">Basic</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-basic">Basic</div></td>
+                  <td class="matrix-cell"><div class="level-pill level-basic">Basic</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="component-spec">
+          Basic: indigo-50 / indigo-700  |  Intermediate: teal-50 / teal-800  |  Advanced: orange-50 / orange-700  |  Empty: surface-3 block
+          Sticky skill column: left: 0 / z-index: 1 / background: surface-2  |  Header: surface-2 bg, rounded per cell, Inter 700 11px
+          border-spacing: 3px (creates visual gutter between cells without borders)
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MOTION ═══ -->
+    <section class="ds-section" id="motion">
+      <h2>Motion &amp; Interaction</h2>
+      <p class="section-desc">Transitions are purposeful and brief. Use easing that feels physical: ease-out for entering elements (they decelerate into place), ease-in for exiting. All motion respects <code>prefers-reduced-motion</code>.</p>
+
+      <div class="grid-2 mb-24">
+        <div class="spec-item">
+          <div class="spec-label">Ring mount animation</div>
+          <div class="spec-value">stroke-dashoffset: circumf → target<br>Duration: 600ms<br>Easing: cubic-bezier(.4,0,.2,1)<br>Stagger: 0 / 120ms / 240ms</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Card hover</div>
+          <div class="spec-value">transform: translateY(−2px)<br>box-shadow: shadow-sm → shadow-md<br>Duration: 150ms ease</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Drill-down enter</div>
+          <div class="spec-value">translateX(+24px) + opacity:0 → rest<br>Duration: 220ms ease-out</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Drill-down exit</div>
+          <div class="spec-value">rest → translateX(+24px) + opacity:0<br>Duration: 180ms ease-in</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Row hover</div>
+          <div class="spec-value">background: transparent → surface-3<br>Duration: 100ms linear</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Chip / badge state</div>
+          <div class="spec-value">background + color transitions<br>Duration: 120ms ease</div>
+        </div>
+      </div>
+
+      <div class="component-box">
+        <div class="component-preview" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text-3);margin-bottom:4px;">Reduced motion override</div>
+          <div style="background:var(--surface-2);border-radius:var(--r-md);padding:14px 16px;border:1px solid var(--border);width:100%;font-family:monospace;font-size:12px;color:var(--text-3);">
+            @media (prefers-reduced-motion: reduce) {<br>
+            &nbsp;&nbsp;*, *::before, *::after {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;animation-duration: 0.01ms !important;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;transition-duration: 0.01ms !important;<br>
+            &nbsp;&nbsp;}<br>
+            }
+          </div>
+        </div>
+        <div class="component-spec">All motion collapsed to 0.01ms. Functional state (open/close) must still work visually without animation.</div>
+      </div>
+    </section>
+
+    <!-- ═══ SPACING ═══ -->
+    <section class="ds-section" id="spacing">
+      <h2>Spacing &amp; Grid</h2>
+      <p class="section-desc">An 8px base unit. All spacing values are multiples of 4px or 8px. The page uses a 3-column grid at desktop (sidebar + main + optional detail panel), collapses to 2 columns on tablet, 1 on mobile.</p>
+
+      <div class="grid-2 mb-24">
+        <div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:12px;">Spacing Scale</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-400);width:4px;height:20px;border-radius:2px;"></div>
+              <div style="width:32px;font-family:monospace;color:var(--text-3);">4px</div>
+              <div style="color:var(--text-3);">chip inner padding, icon gap</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-400);width:8px;height:20px;border-radius:2px;"></div>
+              <div style="width:32px;font-family:monospace;color:var(--text-3);">8px</div>
+              <div style="color:var(--text-3);">badge gap, nav icon gap</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-400);width:12px;height:20px;border-radius:2px;"></div>
+              <div style="width:32px;font-family:monospace;color:var(--text-3);">12px</div>
+              <div style="color:var(--text-3);">card grid gap, chip row gap</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-400);width:16px;height:20px;border-radius:2px;"></div>
+              <div style="width:32px;font-family:monospace;color:var(--text-3);">16px</div>
+              <div style="color:var(--text-3);">row gap, min side gutter</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-400);width:24px;height:20px;border-radius:2px;"></div>
+              <div style="width:32px;font-family:monospace;color:var(--text-3);">24px</div>
+              <div style="color:var(--text-3);">card padding, section gap</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-400);width:32px;height:20px;border-radius:2px;"></div>
+              <div style="width:32px;font-family:monospace;color:var(--text-3);">32px</div>
+              <div style="color:var(--text-3);">panel spacing, legend gap</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-400);width:48px;height:20px;border-radius:2px;"></div>
+              <div style="width:32px;font-family:monospace;color:var(--text-3);">48px</div>
+              <div style="color:var(--text-3);">section separation in main</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);margin-bottom:12px;">Border Radii</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-50);border:1.5px solid var(--teal-200);width:40px;height:28px;border-radius:6px;"></div>
+              <div style="font-family:monospace;color:var(--text-3);">--r-sm: 6px</div>
+              <div style="color:var(--text-4);">matrix cells, micro</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-50);border:1.5px solid var(--teal-200);width:48px;height:32px;border-radius:10px;"></div>
+              <div style="font-family:monospace;color:var(--text-3);">--r-md: 10px</div>
+              <div style="color:var(--text-4);">nav items, drill badges</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-50);border:1.5px solid var(--teal-200);width:56px;height:36px;border-radius:16px;"></div>
+              <div style="font-family:monospace;color:var(--text-3);">--r-lg: 16px</div>
+              <div style="color:var(--text-4);">stat tiles, token cards</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-50);border:1.5px solid var(--teal-200);width:64px;height:40px;border-radius:22px;"></div>
+              <div style="font-family:monospace;color:var(--text-3);">--r-xl: 22px</div>
+              <div style="color:var(--text-4);">cards, panels</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;">
+              <div style="background:var(--teal-50);border:1.5px solid var(--teal-200);width:72px;height:28px;border-radius:9999px;"></div>
+              <div style="font-family:monospace;color:var(--text-3);">--r-full: 9999px</div>
+              <div style="color:var(--text-4);">chips, search bar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec-item" style="margin-bottom:16px;">
+        <div class="spec-label">Page Grid — Desktop</div>
+        <div class="spec-value">Sidebar: 220px fixed  |  Main: flex:1 max-width 1100px  |  Optional detail panel: 400px fixed right  |  Gap: 0 (border separates)</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Breakpoints</div>
+        <div class="spec-value">≥ 1080px: sidebar + main  |  840–1080px: no sidebar, full main  |  ≤ 540px: single column, stacked cards</div>
+      </div>
+    </section>
+
+    <!-- ═══ ICONS ═══ -->
+    <section class="ds-section" id="icons">
+      <h2>Iconography</h2>
+      <p class="section-desc">Use 20×20 or 24×24 SVG icons, 2px stroke, stroke-linecap and stroke-linejoin both round. No filled icons. Color from tokens only. Heroicons or Lucide are recommended source libraries.</p>
+
+      <div class="component-box">
+        <div class="component-preview" style="gap:20px;flex-wrap:wrap;">
+          <!-- Sample icon set -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="background:var(--teal-50);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <span style="font-size:10.5px;color:var(--text-4);">Home</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="background:var(--teal-50);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <span style="font-size:10.5px;color:var(--text-4);">Search</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="background:var(--teal-50);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <span style="font-size:10.5px;color:var(--text-4);">Roles</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="background:var(--teal-50);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <span style="font-size:10.5px;color:var(--text-4);">Skills</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="background:var(--teal-50);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <span style="font-size:10.5px;color:var(--text-4);">Matrix</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="background:var(--teal-50);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <span style="font-size:10.5px;color:var(--text-4);">History</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="background:var(--teal-50);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <span style="font-size:10.5px;color:var(--text-4);">Export</span>
+          </div>
+        </div>
+        <div class="component-spec">
+          All icons: 18–24px · stroke-width: 2px · stroke-linecap: round · stroke-linejoin: round · fill: none
+          Container: 40×40px · border-radius: 10px · background: teal-50 for teal icons
+          Recommended: Heroicons (heroicons.dev) or Lucide (lucide.dev) — outline variants only
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// ── Active nav state ──
+const navItems = document.querySelectorAll('.nav-item');
+const sections = document.querySelectorAll('.ds-section, .section-hero');
+
+function setActive() {
+  let current = '';
+  sections.forEach(s => {
+    const rect = s.getBoundingClientRect();
+    if (rect.top < 120) current = s.id;
+  });
+  navItems.forEach(item => {
+    item.classList.toggle('active', item.getAttribute('href') === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', setActive, { passive: true });
+
+navItems.forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(item.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// ── Animate rings on load ──
+document.querySelectorAll('circle[id^="r"]').forEach((ring, i) => {
+  const target = parseFloat(ring.getAttribute('stroke-dashoffset'));
+  const circ   = parseFloat(ring.getAttribute('stroke-dasharray'));
+  ring.setAttribute('stroke-dashoffset', circ);
+  setTimeout(() => {
+    ring.style.transition = `stroke-dashoffset 600ms cubic-bezier(.4,0,.2,1)`;
+    ring.setAttribute('stroke-dashoffset', target);
+  }, 200 + i * 120);
+});
+
+// ── Respect reduced motion ──
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('[style*="transition"]').forEach(el => {
+    el.style.transition = 'none';
+  });
+}
+</script>
+
+</body></html>
